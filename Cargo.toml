@@ -1,0 +1,21 @@
+[package]
+name = "input_validation_engine"
+version = "0.1.0"
+edition = "2021"
+authors = ["Sirnickko"]
+description = "A reusable, zero-dependency input validation library for emails, phone numbers, URLs, dates, UUIDs, and more."
+license = "MIT"
+keywords = ["validation", "email", "phone", "uuid", "password"]
+categories = ["text-processing", "value-formatting"]
+
+[[bin]]
+name = "input-validator"
+path = "src/bin/main.rs"
+
+[lib]
+name = "input_validation_engine"
+path = "src/lib.rs"
+
+[dependencies]
+
+[dev-dependencies]
