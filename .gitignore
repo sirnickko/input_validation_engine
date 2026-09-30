@@ -1,1 +1,11 @@
+# Rust
 /target
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+python/*.egg-info/
+python/.pytest_cache/
+python/.mypy_cache/
