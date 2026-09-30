@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "input-validation-engine"
+version = "0.1.0"
+description = "A reusable, zero-dependency input validation library (Python port)."
+authors = [{name = "Sirnickko"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["validation", "email", "phone", "uuid", "password"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+]
+
+[project.scripts]
+input-validator = "input_validation_engine.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
