@@ -15,13 +15,14 @@ from input_validation_engine.errors import (
 from input_validation_engine.validators import PasswordConfig, PasswordValidator
 
 cfg = PasswordConfig()
+strict_cfg = PasswordConfig(require_symbol=True)
 
 
 def test_valid_password():
     PasswordValidator.validate("Secure1pass", cfg)
 
 def test_valid_with_symbol():
-    PasswordValidator.validate("Secure1pass!", PasswordConfig.strict())
+    PasswordValidator.validate("Secure1pass!", strict_cfg)
 
 def test_too_short():
     with pytest.raises(TooShort):
@@ -41,7 +42,7 @@ def test_missing_number():
 
 def test_missing_symbol_when_required():
     with pytest.raises(MissingSymbol):
-        PasswordValidator.validate("Secure1pass", PasswordConfig.strict())
+        PasswordValidator.validate("Secure1pass", strict_cfg)
 
 def test_empty():
     with pytest.raises(EmptyInput):

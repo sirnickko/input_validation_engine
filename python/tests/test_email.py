@@ -11,7 +11,6 @@ from input_validation_engine.errors import (
     InvalidLocalPart,
     InvalidTLD,
     MissingAtSign,
-    TooLong,
 )
 from input_validation_engine.validators import EmailConfig, EmailValidator
 
