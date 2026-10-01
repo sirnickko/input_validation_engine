@@ -1,6 +1,6 @@
 # 🛡️ Input Validation Engine
 
-> A reusable, zero-dependency Rust library for validating common input types — emails, phone numbers, URLs, dates, UUIDs, credit cards, IP addresses, postal codes, usernames, and passwords.
+> A reusable, zero-dependency Rust library for validating common input types — emails, phone numbers, URLs, dates, UUIDs, credit cards, IBANs, IP addresses, postal codes, usernames, and passwords.
 
 ---
 
@@ -14,6 +14,7 @@
 | `DateValidator` | ISO 8601 dates with leap-year awareness |
 | `UuidValidator` | RFC 4122 UUIDs v1–v5, hyphenated and compact |
 | `CreditCardValidator` | Luhn algorithm + network detection (Visa, MC, Amex…) |
+| `IbanValidator` | Country-specific length + MOD-97 checksum |
 | `IpValidator` | IPv4 and IPv6 addresses |
 | `PostalCodeValidator` | Country-specific codes (US, UK, CA, DE, AU, KE) |
 | `UsernameValidator` | Configurable length, chars, reserved words |
@@ -119,6 +120,33 @@ PasswordValidator::validate("Secure1pass", &PasswordConfig::default())?;
 
 // Strict: also requires a symbol
 PasswordValidator::validate("Secure1pass!", &PasswordConfig::strict())?;
+
+// Heuristic score from 0 (weak) to 4 (strong)
+let score = PasswordValidator::score("Secure1pass!");
+```
+
+### IBAN
+```rust
+use input_validation_engine::validators::iban::{IbanConfig, IbanValidator};
+use input_validation_engine::Validator;
+
+IbanValidator::validate("GB82 WEST 1234 5698 7654 32", &IbanConfig)?;
+```
+
+### Batch validation
+```rust
+use input_validation_engine::validate_all;
+use input_validation_engine::validators::email::{EmailConfig, EmailValidator};
+use input_validation_engine::validators::password::{PasswordConfig, PasswordValidator};
+use input_validation_engine::Validator;
+
+let report = validate_all([
+    ("email", EmailValidator::validate("invalid", &EmailConfig::default())),
+    ("password", PasswordValidator::validate("short", &PasswordConfig::default())),
+]);
+for field_error in report.errors() {
+    println!("{}: {}", field_error.field, field_error.error);
+}
 ```
 
 ---
@@ -171,7 +199,7 @@ cargo run --bin input-validator -- --interactive
 cargo test
 ```
 
-Expected output: all tests pass across all 10 validators.
+Expected output: all tests pass across all validators and batch APIs.
 
 ---
 

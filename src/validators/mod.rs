@@ -10,3 +10,4 @@ pub mod ip_address;
 pub mod postal_code;
 pub mod username;
 pub mod password;
+pub mod iban;

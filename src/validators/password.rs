@@ -53,6 +53,36 @@ pub struct PasswordValidator;
 
 const SYMBOLS: &str = "!@#$%^&*()-_=+[]{}|;:',.<>?/`~\"\\";
 
+impl PasswordValidator {
+    /// Return a heuristic strength score from 0 (weak) to 4 (strong).
+    ///
+    /// This score measures length and character variety; it does not check
+    /// whether a password is common or has appeared in a data breach.
+    pub fn score(input: &str) -> u8 {
+        let length_score = match input.chars().count() {
+            0..=7 => 0,
+            8..=11 => 1,
+            12..=15 => 2,
+            _ => 3,
+        };
+        let has_uppercase = input.chars().any(|ch| ch.is_ascii_uppercase());
+        let has_lowercase = input.chars().any(|ch| ch.is_ascii_lowercase());
+        let has_number = input.chars().any(|ch| ch.is_ascii_digit());
+        let has_symbol = input.chars().any(|ch| SYMBOLS.contains(ch));
+        let variety_score = match [has_uppercase, has_lowercase, has_number, has_symbol]
+            .into_iter()
+            .filter(|present| *present)
+            .count()
+        {
+            4 => 2,
+            3 => 1,
+            _ => 0,
+        };
+
+        (length_score + variety_score).min(4)
+    }
+}
+
 impl Validator for PasswordValidator {
     type Config = PasswordConfig;
 
@@ -152,5 +182,13 @@ mod tests {
             PasswordValidator::validate(&long, &cfg()),
             Err(ValidationError::TooLong { .. })
         ));
+    }
+
+    #[test]
+    fn score_is_bounded_and_rewards_length_and_variety() {
+        assert_eq!(PasswordValidator::score(""), 0);
+        assert_eq!(PasswordValidator::score("password"), 1);
+        assert_eq!(PasswordValidator::score("Secure1pass!"), 4);
+        assert_eq!(PasswordValidator::score("A1a!".repeat(20).as_str()), 4);
     }
 }
