@@ -1,6 +1,4 @@
-//! Email address validator (RFC 5322 – simplified).
-//!
-//! Checks structural correctness without making DNS calls.
+
 //! Rules enforced:
 //! - Must contain exactly one `@`
 //! - Local part: 1–64 chars, alphanumeric + `.-_+`
@@ -12,7 +10,6 @@ use crate::{ValidationError, Validator};
 /// Configuration for [`EmailValidator`].
 #[derive(Debug, Clone)]
 pub struct EmailConfig {
-    /// Maximum total length of the email address (default 254 per RFC 5321).
     pub max_length: usize,
 }
 
